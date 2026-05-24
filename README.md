@@ -191,4 +191,18 @@ It also scans for `<video>` and `<audio>` elements (including those inside Shado
 
 ---
 
+## Screenshot 1 - Off State
+
+<img width="675" height="581" alt="Screenshot 2026-05-24 203524" src="https://github.com/user-attachments/assets/772cfd9c-7085-4e5f-8644-563a6cdfa25b" />
+
+## Screenshot 2 - On State (Nothing Playing)
+
+<img width="675" height="581" alt="Screenshot 2026-05-24 203557" src="https://github.com/user-attachments/assets/70fb58f1-9e6f-4a90-9138-889127e8ed00" />
+
+## Screenshot 3 - On State (Playing)
+
+<img width="675" height="581" alt="Screenshot 2026-05-24 203638" src="https://github.com/user-attachments/assets/6a18d837-0d18-4dc9-8263-4277b5c48f00" />
+
+---
+
 *vibed by — [github.com/dip-chakraborty](https://github.com/dip-chakraborty)*
