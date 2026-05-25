@@ -8,7 +8,7 @@
 
 (4) This extension does not intend to harm anyone in any means.
 
-(5) The developer disregards all claims, and not liable for damages, legal bindings from usage standpoint at any circumstances.
+(5) The developer disregards all claims, and not liable for damages and/or legal bindings from usage standpoint at any circumstances.
 
 (6) This extension does not collect any data. Everything is with the user itself.
 
