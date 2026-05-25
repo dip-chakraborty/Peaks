@@ -12,6 +12,6 @@
 
 (6) This extension does not collect any data. Everything is with the user itself.
 
-(7) It is automatically inferred that the user has downloaded the extension from stores and/or dealt with source codes by there choice and full intent.
+(7) It is automatically inferred that the user has downloaded the extension from stores and/or dealt with source codes by own choice and full intent.
 
 (8) It is automatically inferred that the user has gone through the documentation and the sources codes and agreed upon the usage with full consciousness.
