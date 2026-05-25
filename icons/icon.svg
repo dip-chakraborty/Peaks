@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Background Dark Gradient -->
+    <radialGradient id="bg-grad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#131524" />
+      <stop offset="100%" stop-color="#07080e" />
+    </radialGradient>
+
+    <!-- Neon Bar Gradient -->
+    <linearGradient id="neon-grad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#a78bfa" />
+      <stop offset="60%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#fb7185" />
+    </linearGradient>
+
+    <!-- Glow Effect -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Circular Container -->
+  <rect width="128" height="128" rx="28" fill="url(#bg-grad)" stroke="rgba(255,255,255,0.06)" stroke-width="2" />
+  
+  <!-- Sleek Glowing Circle Accent -->
+  <circle cx="64" cy="64" r="54" fill="none" stroke="rgba(167, 139, 250, 0.05)" stroke-width="1.5" />
+
+  <!-- 11 Glowing EQ Soundwave Bars -->
+  <g filter="url(#glow)" transform="translate(18, 30)">
+    <!-- Bar 1 (Left / HPF) -->
+    <rect x="0" y="24" width="4" height="20" rx="2" fill="url(#neon-grad)" opacity="0.6" />
+    <!-- Bar 2 -->
+    <rect x="8" y="16" width="4" height="36" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 3 -->
+    <rect x="16" y="8" width="4" height="52" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 4 -->
+    <rect x="24" y="14" width="4" height="40" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 5 -->
+    <rect x="32" y="20" width="4" height="28" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 6 (Center) -->
+    <rect x="40" y="4" width="4" height="60" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 7 -->
+    <rect x="48" y="18" width="4" height="32" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 8 -->
+    <rect x="56" y="12" width="4" height="44" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 9 -->
+    <rect x="64" y="6" width="4" height="56" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 10 -->
+    <rect x="72" y="16" width="4" height="36" rx="2" fill="url(#neon-grad)" />
+    <!-- Bar 11 (Right / LPF) -->
+    <rect x="80" y="24" width="4" height="20" rx="2" fill="url(#neon-grad)" opacity="0.6" />
+  </g>
+  
+  <!-- Tiny Glowing Power Dot at center bottom -->
+  <circle cx="64" cy="110" r="2.5" fill="#34d399" filter="url(#glow)" />
+</svg>

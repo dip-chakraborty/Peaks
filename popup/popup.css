@@ -1,0 +1,949 @@
+/* Peaks - Premium Lavender & Emerald Style Sheet */
+
+:root {
+  --bg-dark: #07080e;
+  --panel-bg: rgba(14, 16, 27, 0.7);
+  --border-color: rgba(255, 255, 255, 0.05);
+  --border-color-hover: rgba(167, 139, 250, 0.18);
+  --text-primary: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  /* Modern Pleasing Lavender & Mint Theme */
+  --accent-cyan: #a78bfa;     /* Beautiful Lavender */
+  --accent-purple: #c084fc;   /* Soft Orchid */
+  --accent-green: #34d399;    /* Fresh Emerald Mint */
+  --accent-red: #fb7185;      /* Cozy Rose Pink */
+  --glow-cyan: rgba(167, 139, 250, 0.35);
+  --glow-green: rgba(52, 211, 153, 0.25);
+  --glow-red: rgba(251, 113, 133, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  user-select: none;
+}
+
+body {
+  width: 530px;
+  height: 455px;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Glassmorphic Main Container */
+.eq-container {
+  width: 100%;
+  height: 100%;
+  padding: 14px 16px;
+  background: radial-gradient(circle at top left, rgba(28, 30, 48, 0.7) 0%, rgba(7, 8, 14, 0.98) 100%);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header Styling */
+.eq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  position: relative;
+  width: 10px;
+  height: 10px;
+}
+
+.logo-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-cyan);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.logo-pulse {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  border: 2px solid var(--accent-cyan);
+  border-radius: 50%;
+  animation: pulse 2s infinite ease-out;
+  opacity: 0;
+  transition: border-color 0.3s;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+/* Enabled States */
+body.eq-active .logo-dot {
+  background-color: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+}
+
+body.eq-active .logo-pulse {
+  border-color: var(--accent-green);
+}
+
+.brand h1 {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #ffffff 40%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.controls-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Custom Dropdown Styling */
+.custom-dropdown {
+  position: relative;
+  width: 120px;
+}
+
+.dropdown-trigger {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.dropdown-trigger:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--border-color-hover);
+}
+
+.dropdown-trigger:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.15);
+}
+
+.dropdown-arrow {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 160px;
+  background: rgba(10, 11, 20, 0.98);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(167, 139, 250, 0.15);
+  z-index: 150;
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 4px 0;
+  animation: dropdown-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdown-enter {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.dropdown-menu::-webkit-scrollbar {
+  width: 4px;
+}
+.dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
+}
+
+.dropdown-group-header {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  padding: 6px 12px 3px 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  margin-bottom: 2px;
+}
+
+.dropdown-item {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dropdown-item:hover {
+  background: rgba(167, 139, 250, 0.1);
+  color: var(--accent-cyan);
+}
+
+.dropdown-item.selected {
+  background: rgba(52, 211, 153, 0.08);
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+.dropdown-item.selected::after {
+  content: "✓";
+  font-size: 9px;
+  color: var(--accent-green);
+}
+
+/* Master Power Button */
+.power-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 25, 68, 0.08);
+  border: 1px solid rgba(255, 23, 68, 0.25);
+  padding: 5px 12px;
+  border-radius: 6px;
+  color: var(--accent-red);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.power-btn:hover {
+  background: rgba(255, 23, 68, 0.15);
+  box-shadow: 0 0 8px rgba(255, 23, 68, 0.15);
+}
+
+body.eq-active .power-btn {
+  background: rgba(0, 230, 118, 0.08);
+  border-color: rgba(0, 230, 118, 0.3);
+  color: var(--accent-green);
+  box-shadow: 0 0 10px var(--glow-green);
+}
+
+body.eq-active .power-btn:hover {
+  background: rgba(0, 230, 118, 0.15);
+  box-shadow: 0 0 12px rgba(0, 230, 118, 0.25);
+}
+
+/* Combined Curve Visualizer & Sliders */
+.visualizer-container {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 8px 4px 8px;
+  margin-bottom: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 213px; /* Exact physical height matching overlaid bands + labels */
+}
+
+#response-curve {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: block;
+  pointer-events: none; /* Let clicks pass through to sliders */
+}
+
+.visualizer-labels {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  pointer-events: none;
+}
+
+/* EQ Sliders Row (Overlay) */
+.eq-sliders-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  height: 183px; /* Explicit overlaid sliders height */
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+/* Slider Module */
+.band-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 42px;
+  height: 183px; /* Explicit layout height */
+  position: relative;
+}
+
+.band-freq {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+  height: 12px;
+  line-height: 12px;
+  margin: 0 0 4px 0;
+  transition: color 0.2s;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.9);
+}
+
+.band-control:hover .band-freq {
+  color: var(--text-primary);
+}
+
+/* Type Select Button inside Band */
+.band-type-btn {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  font-size: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 32px;
+  height: 16px;
+  padding: 0;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 4px;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+}
+
+.band-type-btn:hover {
+  color: var(--accent-cyan);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Slider Track & Thumb Styling */
+.slider-container {
+  height: 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  margin: 0;
+}
+
+.slider-container input[type="range"] {
+  writing-mode: vertical-lr;
+  direction: rtl; /* This aligns top of slider to maximum positive value */
+  width: 16px;
+  height: 100%;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+/* Webkit Track Customization */
+.slider-container input[type="range"]::-webkit-slider-runnable-track {
+  width: 3px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.band-control:hover input[type="range"]::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+body.eq-active .band-control input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(to top, rgba(167, 139, 250, 0.1) 0%, rgba(192, 132, 252, 0.25) 100%);
+}
+
+/* Webkit Thumb Customization */
+.slider-container input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #1a1c29;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  margin-left: -3.5px; /* Center thumb on webkit track */
+  transition: transform 0.1s ease, background-color 0.2s, box-shadow 0.2s;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  background-color: var(--accent-cyan);
+}
+
+body.eq-active .slider-container input[type="range"]::-webkit-slider-thumb {
+  background-color: var(--accent-cyan);
+  border-color: #0f1013;
+  box-shadow: 0 0 6px var(--accent-cyan);
+}
+
+body.eq-active .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+/* Firefox Track and Thumb Styling */
+.slider-container input[type="range"]::-moz-range-track {
+  width: 3px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+
+.slider-container input[type="range"]::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #1a1c29;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: transform 0.1s ease;
+}
+
+body.eq-active .slider-container input[type="range"]::-moz-range-thumb {
+  background-color: var(--accent-cyan);
+  box-shadow: 0 0 6px var(--accent-cyan);
+}
+
+/* Numerical Readout below Slider */
+.band-value {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  height: 12px;
+  line-height: 12px;
+  margin: 4px 0 0 0;
+  width: 100%;
+  text-align: center;
+  letter-spacing: 0.1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.9);
+}
+
+body.eq-active .band-control.active-adjust .band-value {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+/* Band Solo Button */
+.band-solo-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  font-size: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 0 0;
+  transition: all 0.15s ease;
+}
+
+.band-solo-btn:hover {
+  background: rgba(0, 242, 254, 0.1);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.band-solo-btn.active {
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+  color: #ffffff;
+  box-shadow: 0 0 6px var(--glow-red);
+  animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 6px rgba(251, 113, 133, 0.4); }
+  50% { box-shadow: 0 0 12px rgba(251, 113, 133, 0.75); }
+  100% { box-shadow: 0 0 6px rgba(251, 113, 133, 0.4); }
+}
+
+/* Footer Section */
+.eq-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s;
+  outline: none;
+}
+
+.text-btn:hover {
+  color: var(--text-primary);
+}
+
+.tip-text {
+  font-size: 8.5px;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.2px;
+}
+
+.credit-link {
+  text-decoration: none;
+  color: rgba(167, 139, 250, 0.45);
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+  cursor: pointer;
+}
+.credit-link:hover {
+  color: rgba(167, 139, 250, 0.85);
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.5);
+}
+
+/* Preset Icon Buttons */
+.icon-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 6px;
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: var(--border-color-hover);
+  color: var(--text-primary);
+}
+
+.icon-btn.delete-btn {
+  background: rgba(251, 113, 133, 0.05);
+  border-color: rgba(251, 113, 133, 0.15);
+  color: var(--accent-red);
+}
+
+.icon-btn.delete-btn:hover {
+  background: rgba(251, 113, 133, 0.12);
+  border-color: var(--accent-red);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Preset Modal Overlay */
+.preset-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(7, 8, 14, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  transition: opacity 0.25s ease;
+}
+
+.preset-modal-content {
+  background: radial-gradient(circle at top left, rgba(32, 34, 54, 0.95) 0%, rgba(14, 16, 28, 0.98) 100%);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(167, 139, 250, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  width: 280px;
+  text-align: center;
+  animation: modal-enter 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-enter {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.preset-modal h3 {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #ffffff 40%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.overwrite-msg {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 18px;
+  -webkit-text-fill-color: var(--text-muted);
+}
+
+.overwrite-msg span {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  -webkit-text-fill-color: var(--accent-cyan);
+}
+
+#preset-name-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  outline: none;
+  margin-bottom: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+#preset-name-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.preset-modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+  border: none;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+  transform: translateY(-1px);
+}
+
+/* Tabbed Dials Section Styling */
+.dials-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dial-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 6px;
+}
+
+.dial-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dial-tab-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.dial-tab-btn.active {
+  background: rgba(167, 139, 250, 0.1);
+  color: var(--accent-cyan);
+  border-color: rgba(167, 139, 250, 0.25);
+  text-shadow: 0 0 8px rgba(167, 139, 250, 0.3);
+}
+
+/* EQ Dials Row Styling */
+.eq-dials-row {
+  display: flex;
+  justify-content: center; /* Center the dials per active tab */
+  gap: 12px; /* Balanced comfortable spacing */
+  padding: 4px 0 0 0;
+  border: none;
+  background: transparent;
+}
+
+/* Dial Control Module */
+.dial-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 66px;
+  position: relative;
+}
+
+.dial-label {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.dial-control:hover .dial-label {
+  color: var(--text-primary);
+}
+
+.dial-wrapper {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Interactive Dial Knob */
+.dial-knob {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle at 35% 35%, #2a2e45 0%, #111322 100%);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), 
+              0 4px 6px rgba(0,0,0,0.4),
+              0 0 0 1px rgba(0,0,0,0.4);
+  cursor: ns-resize;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dial-knob:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+body.eq-active .dial-knob {
+  border-color: rgba(167, 139, 250, 0.25);
+}
+
+body.eq-active .dial-control:hover .dial-knob {
+  border-color: var(--accent-cyan);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.05), 
+              0 4px 8px rgba(0,0,0,0.5),
+              0 0 8px rgba(167, 139, 250, 0.25);
+}
+
+/* Dial Marker Dot */
+.dial-marker {
+  position: absolute;
+  width: 3px;
+  height: 6px;
+  background: var(--text-muted);
+  border-radius: 1.5px;
+  top: 4px;
+  left: calc(50% - 1.5px);
+  transform-origin: 50% 12px;
+  transition: background-color 0.2s, transform 0.08s ease;
+}
+
+body.eq-active .dial-marker {
+  background: var(--accent-cyan);
+  box-shadow: 0 0 4px var(--accent-cyan);
+}
+
+/* Dial SVG Ring */
+.dial-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: rotate(135deg);
+  pointer-events: none;
+}
+
+.dial-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.05);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 75.4;
+  stroke-dashoffset: 0;
+}
+
+.dial-fill {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 75.4;
+  stroke-dashoffset: 75.4;
+  transition: stroke-dashoffset 0.08s ease, stroke 0.2s ease;
+}
+
+body.eq-active .dial-fill {
+  stroke: var(--accent-cyan);
+  filter: drop-shadow(0 0 2px var(--accent-cyan));
+}
+
+.dial-value {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+  letter-spacing: 0.1px;
+  width: 100%;
+}
+
+body.eq-active .dial-control.active-adjust .dial-value {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+/* =============================================
+   Master-Off Disabled State Styles
+   ============================================= */
+
+/* Dim and block interaction on visualizer + dials sections */
+.ui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Slightly dim the preset dropdown and save/delete buttons (not the power button) */
+.header-disabled {
+  opacity: 0.42;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Disabled native inputs / buttons */
+.band-control input[type="range"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.band-type-btn:disabled,
+.band-solo-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.dial-tab-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Blocked dial knob when master is off */
+.dial-knob.dial-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.42;
+}
+
+/* Reset button disabled look */
+#reset-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+/* Dropdown trigger disabled */
+.dropdown-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Save preset button disabled */
+#save-preset-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
