@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peaks - Audio Equalizer</title>
+  <link rel="icon" type="image/png" href="icons/icon-48.png">
+  <meta name="description" content="A high-precision, 11-band audio equalizer and mastering suite for your browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Landing Page Base Styles */
+    :root {
+      --bg-dark: #07080e;
+      --bg-surface: #0e101b;
+      --panel-bg: rgba(14, 16, 27, 0.7);
+      --border-color: rgba(255, 255, 255, 0.05);
+      --border-color-hover: rgba(167, 139, 250, 0.18);
+      --text-primary: #f8fafc;
+      --text-muted: #94a3b8;
+      
+      --accent-cyan: #a78bfa;     /* Lavender */
+      --accent-purple: #c084fc;   
+      --accent-green: #34d399;    /* Emerald Mint */
+      --accent-red: #fb7185;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Watermark Background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw;
+      height: 100vh;
+      background: url('icons/peaks_source.png') no-repeat center center;
+      background-size: 700px;
+      opacity: 0.04;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.2;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .accent-text {
+      color: var(--accent-green);
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Nav */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 32px 0;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    .logo-dot-main {
+      width: 16px;
+      height: 16px;
+      background-color: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent-cyan);
+      position: relative;
+    }
+
+    .logo-pulse-main {
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--accent-cyan);
+      border-radius: 50%;
+      animation: pulse-main 2s infinite ease-out;
+    }
+
+    @keyframes pulse-main {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(167, 139, 250, 0.3);
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(167, 139, 250, 0.5);
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+      min-height: 80vh;
+      position: relative;
+    }
+
+    /* Background Glows */
+    .glow-blob {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .glow-1 { top: -200px; left: -200px; background: rgba(167, 139, 250, 0.4); }
+    .glow-2 { bottom: -200px; right: -200px; background: rgba(52, 211, 153, 0.3); }
+
+    .hero-content {
+      flex: 1;
+      max-width: 550px;
+    }
+
+    .hero-content h1 {
+      font-size: 64px;
+      margin-bottom: 24px;
+    }
+
+    .hero-content p {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+
+    /* App Demo Container */
+    .hero-demo {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      perspective: 1000px;
+    }
+
+    .app-wrapper {
+      transform: rotateY(-5deg) rotateX(5deg);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 12px;
+      box-shadow: 20px 20px 60px rgba(0,0,0,0.8), 0 0 20px rgba(167, 139, 250, 0.2);
+    }
+
+    .app-wrapper:hover {
+      transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+    }
+
+    /* Features */
+    .features {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 42px;
+      margin-bottom: 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 24px 20px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: var(--accent-cyan);
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+
+    /* =========================================
+       EMBEDDED POPUP CSS (Modified for Landing)
+       ========================================= */
+    .eq-container {
+      width: 530px;
+      height: 455px;
+      background: radial-gradient(circle at top left, rgba(28, 30, 48, 0.7) 0%, rgba(7, 8, 14, 0.98) 100%);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      /* Reset fonts for inside the app */
+      font-family: system-ui, -apple-system, sans-serif;
+      text-align: left;
+    }
+
+    .eq-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand-logo { position: relative; width: 10px; height: 10px; }
+    .logo-dot { position: absolute; width: 10px; height: 10px; background-color: var(--accent-cyan); border-radius: 50%; box-shadow: 0 0 8px var(--accent-cyan); transition: background-color 0.3s, box-shadow 0.3s; }
+    .logo-pulse { position: absolute; width: 10px; height: 10px; background-color: transparent; border: 2px solid var(--accent-cyan); border-radius: 50%; animation: pulse 2s infinite ease-out; opacity: 0; transition: border-color 0.3s; }
+    
+    .eq-active .logo-dot { background-color: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+    .eq-active .logo-pulse { border-color: var(--accent-green); }
+    
+    .brand h1 { font-size: 14px; font-weight: 800; letter-spacing: 2px; background: linear-gradient(135deg, #ffffff 40%, #c084fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin:0;}
+    .controls-group { display: flex; align-items: center; gap: 10px; }
+    
+    .custom-dropdown { position: relative; width: 120px; }
+    .dropdown-trigger { width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 6px; color: var(--text-primary); font-size: 11px; font-weight: 600; cursor: pointer; outline: none; display: flex; justify-content: space-between; align-items: center; gap: 4px; transition: all 0.2s ease; }
+    .dropdown-trigger:hover { background: rgba(255, 255, 255, 0.09); border-color: var(--border-color-hover); }
+    .dropdown-arrow { color: var(--text-muted); transition: transform 0.2s ease; flex-shrink: 0; }
+    
+    .dropdown-menu { position: absolute; top: calc(100% + 5px); right: 0; width: 160px; background: rgba(10, 11, 20, 0.98); backdrop-filter: blur(12px); border: 1px solid rgba(167, 139, 250, 0.25); border-radius: 8px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85), 0 0 12px rgba(167, 139, 250, 0.15); z-index: 150; max-height: 190px; overflow-y: auto; padding: 4px 0; display: none;}
+    .dropdown-menu.active { display: block; animation: dropdown-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes dropdown-enter { from { transform: translateY(-8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .dropdown-group-header { font-size: 8px; font-weight: 700; color: var(--accent-cyan); padding: 6px 12px 3px 12px; letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid rgba(255, 255, 255, 0.03); margin-bottom: 2px; }
+    .dropdown-item { font-size: 11px; font-weight: 500; color: var(--text-primary); padding: 7px 12px; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; justify-content: space-between; }
+    .dropdown-item:hover { background: rgba(167, 139, 250, 0.1); color: var(--accent-cyan); }
+    .dropdown-item.selected { background: rgba(52, 211, 153, 0.08); color: var(--accent-green); font-weight: 700; }
+    
+    .power-btn { display: flex; align-items: center; gap: 6px; background: rgba(255, 25, 68, 0.08); border: 1px solid rgba(255, 23, 68, 0.25); padding: 5px 12px; border-radius: 6px; color: var(--accent-red); font-size: 10px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; outline: none; transition: all 0.2s; }
+    .eq-active .power-btn { background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.3); color: var(--accent-green); box-shadow: 0 0 10px rgba(52, 211, 153, 0.25); }
+    
+    .icon-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); padding: 6px; border-radius: 6px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+    .icon-btn:hover { background: rgba(255, 255, 255, 0.09); color: var(--text-primary); }
+    
+    .visualizer-container { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px 8px 4px 8px; margin-bottom: 12px; position: relative; display: flex; flex-direction: column; height: 213px; }
+    #response-curve { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+    .visualizer-labels { position: relative; z-index: 2; display: flex; justify-content: space-between; margin-top: 4px; font-size: 8px; font-weight: 600; color: var(--text-muted); pointer-events: none; }
+    
+    .eq-sliders-row { position: relative; z-index: 2; display: flex; justify-content: space-between; gap: 5px; height: 183px; }
+    .band-control { display: flex; flex-direction: column; align-items: center; width: 42px; height: 183px; position: relative; }
+    .band-freq { font-size: 9px; font-weight: 700; color: var(--text-muted); height: 12px; line-height: 12px; margin: 0 0 4px 0; text-shadow: 0 1px 2px rgba(0,0,0,0.9); transition: color 0.2s;}
+    .band-type-btn { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); color: var(--text-muted); font-size: 8px; font-weight: 600; cursor: pointer; width: 32px; height: 16px; border-radius: 4px; margin: 0 0 6px 0; }
+    .slider-container { height: 110px; display: flex; justify-content: center; align-items: center; width: 100%; }
+    
+    .slider-container input[type="range"] { writing-mode: vertical-lr; direction: rtl; width: 16px; height: 100%; appearance: none; background: transparent; cursor: pointer; outline: none; }
+    .slider-container input[type="range"]::-webkit-slider-runnable-track { width: 3px; height: 100%; background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .eq-active .band-control input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(to top, rgba(167, 139, 250, 0.1) 0%, rgba(192, 132, 252, 0.25) 100%); }
+    .slider-container input[type="range"]::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; border-radius: 50%; background: #ffffff; border: 2px solid #1a1c29; box-shadow: 0 1px 3px rgba(0,0,0,0.3); margin-left: -3.5px; transition: transform 0.1s, background-color 0.2s; }
+    .eq-active .slider-container input[type="range"]::-webkit-slider-thumb { background-color: var(--accent-cyan); border-color: #0f1013; box-shadow: 0 0 6px var(--accent-cyan); }
+    
+    .band-value { font-size: 8px; font-weight: 600; color: var(--text-muted); height: 12px; margin: 4px 0 0 0; }
+    .eq-active .band-control.active-adjust .band-value { color: var(--accent-cyan); font-weight: 700; }
+    
+    .band-solo-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); width: 15px; height: 15px; border-radius: 3px; font-size: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; margin: 4px 0 0 0; }
+    .band-solo-btn.active { background: var(--accent-red); border-color: var(--accent-red); color: #fff; box-shadow: 0 0 6px rgba(251, 113, 133, 0.4); animation: pulse-red 1.5s infinite;}
+    @keyframes pulse-red { 0% { box-shadow: 0 0 6px rgba(251, 113, 133, 0.4); } 50% { box-shadow: 0 0 12px rgba(251, 113, 133, 0.75); } 100% { box-shadow: 0 0 6px rgba(251, 113, 133, 0.4); } }
+    
+    .dials-section { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .dial-tabs { display: flex; justify-content: center; gap: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px; }
+    .dial-tab-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); font-size: 8.5px; font-weight: 700; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; cursor: pointer; }
+    .dial-tab-btn.active { background: rgba(167, 139, 250, 0.1); color: var(--accent-cyan); border-color: rgba(167, 139, 250, 0.25); }
+    
+    .eq-dials-row { display: flex; justify-content: center; gap: 12px; padding: 4px 0 0 0; }
+    .dial-control { display: flex; flex-direction: column; align-items: center; width: 66px; }
+    .dial-label { font-size: 8px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+    .dial-wrapper { position: relative; width: 44px; height: 44px; display: flex; justify-content: center; align-items: center; }
+    .dial-knob { position: relative; width: 32px; height: 32px; background: radial-gradient(circle at 35% 35%, #2a2e45 0%, #111322 100%); border-radius: 50%; border: 1px solid rgba(255,255,255,0.06); cursor: ns-resize; z-index: 2; }
+    .dial-marker { position: absolute; top: 0; left: 50%; width: 2px; height: 8px; background: #fff; transform-origin: 50% 16px; margin-left: -1px; border-radius: 1px; }
+    .eq-active .dial-marker { background: var(--accent-cyan); box-shadow: 0 0 4px var(--accent-cyan); }
+    .dial-svg { position: absolute; top: 0; left: 0; width: 44px; height: 44px; transform: rotate(135deg); z-index: 1; pointer-events: none; }
+    .dial-track { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 75.4; stroke-dashoffset: 0; }
+    .dial-fill { fill: none; stroke: rgba(255,255,255,0.3); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 75.4; transition: stroke 0.3s; }
+    .eq-active .dial-fill { stroke: var(--accent-cyan); filter: drop-shadow(0 0 2px var(--accent-cyan)); }
+    .dial-value { font-size: 8.5px; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
+    .eq-active .dial-control.active-adjust .dial-value { color: var(--accent-cyan); font-weight: 700; }
+
+    .eq-footer { display: flex; justify-content: space-between; align-items: center; }
+    .text-btn { background: transparent; border: none; color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer; }
+    .tip-text { font-size: 8.5px; color: rgba(255,255,255,0.25); text-decoration: none; }
+    
+    .ui-disabled { opacity: 0.5; pointer-events: none; filter: grayscale(50%); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; text-align: center; margin-top: 40px; }
+      .hero-content { max-width: 100%; }
+      .app-wrapper { transform: none; margin-top: 40px; }
+      .app-wrapper:hover { transform: scale(1.02); }
+      .glow-blob { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <nav>
+      <div class="logo-container">
+        <div class="logo-dot-main">
+          <div class="logo-pulse-main"></div>
+        </div>
+        PEAKS
+      </div>
+      <div>
+        <img src="icons/icon-48.png" alt="Peaks Logo" width="48" height="48" style="display: block; border-radius: 8px;" />
+      </div>
+    </nav>
+
+    <section class="hero">
+      <!-- Background Glows -->
+      <div class="glow-blob glow-1"></div>
+      <div class="glow-blob glow-2"></div>
+      
+      <div class="hero-content">
+        <h1>Studio-Grade Audio Control <br><span class="gradient-text">In Your Browser</span></h1>
+        <p>A high-precision, 11-band audio equalizer and mastering suite that works across all websites. Intercepts your browser's Web Audio engine to give you unprecedented control over how everything sounds.</p>
+        <div style="display: flex; gap: 16px; justify-content: flex-start; flex-wrap: wrap;">
+          <a href="https://addons.mozilla.org/en-US/firefox/addon/peaks/" class="btn-primary" style="font-size: 16px; padding: 14px 28px;">Get the Extension</a>
+          <a href="https://github.com/dip-chakraborty/Peaks" target="_blank" style="color: var(--text-primary); text-decoration: none; padding: 14px; font-weight: 600; border: 1px solid var(--border-color); border-radius: 8px;">View on GitHub</a>
+        </div>
+      </div>
+
+      <div class="hero-demo">
+        <div class="app-wrapper">
+          <!-- EMBEDDED POPUP UI -->
+          <div class="eq-container" id="eq-app">
+            <header class="eq-header">
+              <div class="brand">
+                <div class="brand-logo">
+                  <span class="logo-dot"></span>
+                  <span class="logo-pulse"></span>
+                </div>
+                <h1>PEAKS</h1>
+              </div>
+              <div class="controls-group">
+                <div class="custom-dropdown" id="preset-dropdown">
+                  <button class="dropdown-trigger" id="dropdown-trigger">
+                    <span id="selected-preset-name">Flat (Default)</span>
+                    <svg class="dropdown-arrow" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </button>
+                  <div class="dropdown-menu" id="dropdown-menu"></div>
+                </div>
+                <button id="save-preset-btn" class="icon-btn">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button id="master-toggle" class="power-btn">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span id="power-status-text">OFF</span>
+                </button>
+              </div>
+            </header>
+            
+            <section class="visualizer-container">
+              <canvas id="response-curve" width="498" height="195"></canvas>
+              <main class="eq-sliders-row" id="sliders-row"></main>
+              <div class="visualizer-labels">
+                <span>20Hz</span><span>100Hz</span><span>1kHz</span><span>10kHz</span><span>20kHz</span>
+              </div>
+            </section>
+            
+            <section class="dials-section">
+              <div class="dial-tabs">
+                <button class="dial-tab-btn active" data-tab="tone">EQ & Filter</button>
+                <button class="dial-tab-btn" data-tab="dynamics">Dynamics</button>
+                <button class="dial-tab-btn" data-tab="spatial">Space & Pan</button>
+              </div>
+              <section class="eq-dials-row" id="dials-row"></section>
+            </section>
+            
+            <footer class="eq-footer">
+              <button id="reset-btn" class="text-btn">Reset All</button>
+              <span class="tip-text">Interactive Demo</span>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <h2 class="section-title">Features that <span class="gradient-text">Elevate</span> your Audio</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎧</div>
+          <h3>11-Band Equalizer</h3>
+          <p>Drag vertical sliders to boost or cut any frequency band. Switch between Peaking, Shelves, High/Low pass, and Bandpass filters on the fly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎛️</div>
+          <h3>Dynamics & Space</h3>
+          <p>Built-in Preamp, Compressor, and Brickwall Limiter. Add transient punch, or widen the stereo image with Mid-Side matrix controls and Reverb.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Real-Time Visualizer</h3>
+          <p>See exactly what you're doing. The frequency response curve visually aggregates all your EQ filters and updates instantly as you tweak.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💾</div>
+          <h3>Preset System</h3>
+          <p>Comes with 9 built-in standard presets. Save and manage your own custom presets locally without needing any accounts or cloud sync.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛡️</div>
+          <h3>Privacy First</h3>
+          <p>No tracking, no analytics, no external servers. Everything runs entirely within your browser's local sandbox, keeping your data yours.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Zero Latency</h3>
+          <p>Hooks directly into the native Web Audio API to route signal chains. No page reloads needed, it just works perfectly across all modern browsers.</p>
+        </div>
+      </div>
+    </section>
+    
+    <footer>
+      <p>&copy; 2026 Peaks. Designed by <a href="https://github.com/dip-chakraborty" style="color: var(--accent-cyan); text-decoration: none;">dip-chakraborty</a>.</p>
+    </footer>
+  </div>
+
+  <!-- EMBEDDED POPUP JS -->
+  <script>
+    // Embedded Peaks App Logic (Mocked for Demo)
+    document.addEventListener("DOMContentLoaded", () => {
+      const DEFAULT_BANDS = [
+        { type: "lowshelf",  frequency: 30,    Q: 0.707, gain: 0, name: "30Hz"  },
+        { type: "lowshelf",  frequency: 60,    Q: 0.707, gain: 0, name: "60Hz"  },
+        { type: "peaking",   frequency: 120,   Q: 0.80,  gain: 0, name: "120Hz" },
+        { type: "peaking",   frequency: 250,   Q: 0.90,  gain: 0, name: "250Hz" },
+        { type: "peaking",   frequency: 500,   Q: 1.00,  gain: 0, name: "500Hz" },
+        { type: "peaking",   frequency: 1000,  Q: 1.00,  gain: 0, name: "1kHz"  },
+        { type: "peaking",   frequency: 2000,  Q: 1.10,  gain: 0, name: "2kHz"  },
+        { type: "peaking",   frequency: 4000,  Q: 1.20,  gain: 0, name: "4kHz"  },
+        { type: "peaking",   frequency: 8000,  Q: 1.50,  gain: 0, name: "8kHz"  },
+        { type: "highshelf", frequency: 12000, Q: 0.707, gain: 0, name: "12kHz" },
+        { type: "highshelf", frequency: 16000, Q: 0.707, gain: 0, name: "16kHz" }
+      ];
+
+      let eqSettings = {
+        enabled: true, // Start enabled for demo
+        bands: JSON.parse(JSON.stringify(DEFAULT_BANDS)),
+        masterGain: 1.0,
+        dials: { highpass: 20, lowpass: 20000, presence: 0, air: 0, brilliance: 0, width: 1.0, compressor: 0.0, limiter: -0.5, transient: 0.0, pan: 0.0, revdry: 1.0, revwet: 0.0 }
+      };
+      
+      let activeSoloIndexes = [];
+      let activeDialTab = "tone";
+      let isAudioPlaying = true; // Simulate audio playing for visualizer
+      let animTime = 0;
+
+      const eqApp = document.getElementById("eq-app");
+      const masterToggle = document.getElementById("master-toggle");
+      const powerStatusText = document.getElementById("power-status-text");
+      const slidersRow = document.getElementById("sliders-row");
+      const dialsRow = document.getElementById("dials-row");
+      const resetBtn = document.getElementById("reset-btn");
+      const canvas = document.getElementById("response-curve");
+      const ctx = canvas.getContext("2d");
+      const dropdownTrigger = document.getElementById("dropdown-trigger");
+      const dropdownMenu = document.getElementById("dropdown-menu");
+
+      const PRESETS = {
+        flat: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "bass-boost": [0, 9, 7, 4, 1, 0, 0, 0, 0, 0, 0],
+        "bass-reducer": [0, -9, -7, -3, 0, 0, 0, 0, 0, 0, 0],
+        "vocal-boost": [3, -3, -1, 2, 5, 6, 5, 3, 1, 0, 0],
+        "treble-boost": [0, 0, 0, 0, 0, 2, 4, 7, 9, 10, 0],
+        acoustic: [0, 5, 4, 1, 2, 3, 4, 5, 6, 4, 0],
+        electronic: [0, 8, 5, 0, -2, 0, 2, 4, 6, 7, 0],
+        rock: [0, 6, 4, -2, -3, 1, 3, 5, 6, 5, 0],
+        classical: [0, 5, 3, 2, 1, -1, -1, 2, 4, 5, 0]
+      };
+
+      const DIAL_CONFIGS = [
+        { id: "highpass", name: "High Pass", tab: "tone", min: 20, max: 800, step: 5, defaultVal: 20, getValueText: (v) => v===20?"Off":`${Math.round(v)}Hz`, scale: "log" },
+        { id: "lowpass", name: "Low Pass", tab: "tone", min: 2000, max: 20000, step: 50, defaultVal: 20000, getValueText: (v) => v===20000?"Off":`${Math.round(v)}Hz`, scale: "log" },
+        { id: "presence", name: "Presence", tab: "tone", min: -12, max: 12, step: 0.2, defaultVal: 0, getValueText: (v) => `${v>0?"+":""}${v.toFixed(1)}dB`, scale: "linear" },
+        
+        { id: "preamp", name: "Preamp", tab: "dynamics", min: 0, max: 2, step: 0.05, defaultVal: 1, getValueText: (v) => `${v.toFixed(2)}x`, scale: "linear" },
+        { id: "compressor", name: "Compressor", tab: "dynamics", min: -40, max: 0, step: 1, defaultVal: 0, getValueText: (v) => v===0?"Off":`${v}dB`, scale: "linear" },
+        
+        { id: "width", name: "Width", tab: "spatial", min: 0, max: 2, step: 0.05, defaultVal: 1, getValueText: (v) => `${Math.round(v*100)}%`, scale: "linear" },
+        { id: "pan", name: "Pan", tab: "spatial", min: -1, max: 1, step: 0.05, defaultVal: 0, getValueText: (v) => v===0?"Center":v>0?`R ${Math.round(v*100)}`:`L ${Math.round(Math.abs(v)*100)}`, scale: "linear" }
+      ];
+
+      function valueToPct(val, config) {
+        if (config.scale === "log") return (Math.log10(val / config.min)) / (Math.log10(config.max / config.min));
+        return (val - config.min) / (config.max - config.min);
+      }
+
+      function pctToValue(pct, config) {
+        pct = Math.max(0, Math.min(1, pct));
+        let val = config.scale === "log" ? config.min * Math.pow(config.max/config.min, pct) : config.min + pct * (config.max - config.min);
+        return Math.round(val / config.step) * config.step;
+      }
+
+      function applyDisabledState() {
+        if(eqSettings.enabled) {
+          eqApp.classList.add("eq-active");
+          eqApp.querySelectorAll('.ui-disabled').forEach(el => el.classList.remove('ui-disabled'));
+        } else {
+          eqApp.classList.remove("eq-active");
+          eqApp.querySelector('.visualizer-container').classList.add('ui-disabled');
+          eqApp.querySelector('.dials-section').classList.add('ui-disabled');
+        }
+      }
+
+      function renderUI() {
+        powerStatusText.textContent = eqSettings.enabled ? "ON" : "OFF";
+        
+        slidersRow.innerHTML = "";
+        eqSettings.bands.forEach((band, idx) => {
+          const div = document.createElement("div");
+          div.className = "band-control";
+          const sign = band.gain > 0 ? "+" : "";
+          div.innerHTML = `
+            <span class="band-freq">${band.name}</span>
+            <button class="band-type-btn">PK</button>
+            <div class="slider-container"><input type="range" min="-20" max="20" step="0.5" value="${band.gain}"></div>
+            <span class="band-value">${sign}${band.gain.toFixed(1)}dB</span>
+            <button class="band-solo-btn">S</button>
+          `;
+          const input = div.querySelector("input");
+          input.addEventListener("input", (e) => {
+            band.gain = parseFloat(e.target.value);
+            div.querySelector(".band-value").textContent = `${band.gain > 0 ? "+" : ""}${band.gain.toFixed(1)}dB`;
+            drawFrequencyResponse();
+          });
+          slidersRow.appendChild(div);
+        });
+
+        applyDisabledState();
+      }
+
+      function renderDials() {
+        dialsRow.innerHTML = "";
+        const configs = DIAL_CONFIGS.filter(c => c.tab === activeDialTab);
+        configs.forEach(config => {
+          let val = config.id === "preamp" ? eqSettings.masterGain : eqSettings.dials[config.id];
+          const pct = valueToPct(val, config);
+          const angle = -135 + pct * 270;
+          const strokeDashoffset = 75.4 - pct * 75.4;
+
+          const div = document.createElement("div");
+          div.className = "dial-control";
+          div.innerHTML = `
+            <span class="dial-label">${config.name}</span>
+            <div class="dial-wrapper">
+              <div class="dial-knob"><div class="dial-marker" style="transform: rotate(${angle}deg)"></div></div>
+              <svg class="dial-svg" viewBox="0 0 40 40">
+                <circle class="dial-track" cx="20" cy="20" r="16"></circle>
+                <circle class="dial-fill" cx="20" cy="20" r="16" style="stroke-dashoffset: ${strokeDashoffset}px"></circle>
+              </svg>
+            </div>
+            <span class="dial-value">${config.getValueText(val)}</span>
+          `;
+          
+          let isDragging = false, startY = 0, startPct = 0;
+          const knob = div.querySelector('.dial-knob');
+          
+          knob.addEventListener("mousedown", (e) => {
+            if(!eqSettings.enabled) return;
+            isDragging = true; startY = e.clientY; startPct = valueToPct(val, config);
+          });
+          window.addEventListener("mousemove", (e) => {
+            if(!isDragging) return;
+            const newPct = Math.max(0, Math.min(1, startPct + (startY - e.clientY) * 0.007));
+            val = pctToValue(newPct, config);
+            if (config.id === "preamp") eqSettings.masterGain = val; else eqSettings.dials[config.id] = val;
+            
+            div.querySelector('.dial-marker').style.transform = `rotate(${-135 + newPct * 270}deg)`;
+            div.querySelector('.dial-fill').style.strokeDashoffset = `${75.4 - newPct * 75.4}px`;
+            div.querySelector('.dial-value').textContent = config.getValueText(val);
+          });
+          window.addEventListener("mouseup", () => isDragging = false);
+
+          dialsRow.appendChild(div);
+        });
+      }
+
+      function drawFrequencyResponse() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw grid
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for(let i=1; i<4; i++) { ctx.moveTo(0, i*(canvas.height/4)); ctx.lineTo(canvas.width, i*(canvas.height/4)); }
+        ctx.stroke();
+
+        if(!eqSettings.enabled) return;
+
+        // Draw EQ curve
+        ctx.beginPath();
+        const rainbowGrad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        rainbowGrad.addColorStop(0, "rgba(255, 0, 0, 0.9)");
+        rainbowGrad.addColorStop(0.15, "rgba(255, 165, 0, 0.9)");
+        rainbowGrad.addColorStop(0.3, "rgba(255, 255, 0, 0.9)");
+        rainbowGrad.addColorStop(0.5, "rgba(0, 128, 0, 0.9)");
+        rainbowGrad.addColorStop(0.65, "rgba(0, 255, 255, 0.9)");
+        rainbowGrad.addColorStop(0.8, "rgba(0, 0, 255, 0.9)");
+        rainbowGrad.addColorStop(1, "rgba(238, 130, 238, 0.9)");
+        ctx.strokeStyle = rainbowGrad;
+        ctx.lineWidth = 2;
+        ctx.moveTo(0, canvas.height/2);
+        
+        for(let x=0; x<canvas.width; x++) {
+          let yOffset = 0;
+          const normX = x / canvas.width;
+          
+          eqSettings.bands.forEach((b, i) => {
+            const center = i / 10; 
+            const dist = Math.abs(normX - center);
+            const influence = Math.max(0, 1 - dist*3);
+            yOffset += (b.gain * influence);
+          });
+
+          // Simulate live audio
+          if(isAudioPlaying) {
+            yOffset += Math.sin(x*0.05 + animTime) * (Math.random()*1.5);
+          }
+          
+          const y = (canvas.height/2) - (yOffset * 3.5);
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        
+        // Fill gradient
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
+        const grad = ctx.createLinearGradient(0,0,0,canvas.height);
+        grad.addColorStop(0, "rgba(167, 139, 250, 0.2)");
+        grad.addColorStop(1, "rgba(167, 139, 250, 0)");
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      function animate() {
+        if(eqSettings.enabled) {
+          animTime += 0.1;
+          drawFrequencyResponse();
+        }
+        requestAnimationFrame(animate);
+      }
+
+      // Event Listeners
+      masterToggle.addEventListener("click", () => {
+        eqSettings.enabled = !eqSettings.enabled;
+        renderUI(); renderDials(); drawFrequencyResponse();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        eqSettings.bands = JSON.parse(JSON.stringify(DEFAULT_BANDS));
+        renderUI(); drawFrequencyResponse();
+      });
+      
+      dropdownTrigger.addEventListener("click", () => dropdownMenu.classList.toggle("active"));
+      
+      const presetNames = [
+        { key: "flat", label: "Flat (Default)" },
+        { key: "bass-boost", label: "Bass Booster" },
+        { key: "bass-reducer", label: "Bass Reducer" },
+        { key: "vocal-boost", label: "Vocal Booster" },
+        { key: "treble-boost", label: "Treble Booster" },
+        { key: "acoustic", label: "Acoustic" },
+        { key: "electronic", label: "Electronic" },
+        { key: "rock", label: "Rock" },
+        { key: "classical", label: "Classical" }
+      ];
+      presetNames.forEach(p => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+        item.textContent = p.label;
+        item.addEventListener("click", () => {
+          eqSettings.bands.forEach((b, i) => b.gain = PRESETS[p.key][i]);
+          document.getElementById("selected-preset-name").textContent = p.label;
+          dropdownMenu.classList.remove("active");
+          renderUI();
+          drawFrequencyResponse();
+        });
+        dropdownMenu.appendChild(item);
+      });
+      document.querySelectorAll(".dial-tab-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          if(!eqSettings.enabled) return;
+          document.querySelectorAll(".dial-tab-btn").forEach(b => b.classList.remove("active"));
+          e.target.classList.add("active");
+          activeDialTab = e.target.dataset.tab;
+          renderDials();
+        });
+      });
+      
+      // Init
+      renderUI();
+      renderDials();
+      animate();
+
+      // Apply a preset for the demo
+      eqSettings.bands.forEach((b, i) => b.gain = PRESETS['acoustic'][i]);
+      renderUI();
+    });
+  </script>
+</body>
+</html>
